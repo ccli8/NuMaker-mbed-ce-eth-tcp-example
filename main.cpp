@@ -16,7 +16,7 @@ extern "C" caddr_t _sbrk(int incr);
 #endif
 
 //#define DEMO_STATIC_IP
-#define LOCAL_LAN
+//#define LOCAL_LAN
 
 namespace {
     // Test connection information
