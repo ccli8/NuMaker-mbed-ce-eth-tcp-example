@@ -1,6 +1,6 @@
-#if !FEATURE_IPV4
-    #error [NOT_SUPPORTED] IPV4 not supported for this target
-#endif
+//#if !FEATURE_IPV4
+//    #error [NOT_SUPPORTED] IPV4 not supported for this target
+//#endif
 
 #include <algorithm>
 #include "mbed.h"
