@@ -1,0 +1,5 @@
+.mbed
+.build/
+BUILD/
+easy-connect/
+mbed-os/
