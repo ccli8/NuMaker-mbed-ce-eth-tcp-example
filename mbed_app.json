@@ -1,0 +1,7 @@
+{
+    "target_overrides": {
+        "*": {
+            "platform.heap-stats-enabled"           : 1
+        }
+    }
+}

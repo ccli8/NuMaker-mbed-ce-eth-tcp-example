@@ -9,13 +9,6 @@
 #include "greentea-client/test_env.h"
 #include "unity/unity.h"
 
-#ifndef __CC_ARM 
-#ifdef __GNUC__
-extern "C" caddr_t _sbrk(int incr);
-#endif
-#endif
-
-
 //#define LOCAL_LAN
 
 namespace {
@@ -54,18 +47,16 @@ bool find_substring(const char *first, const char *last, const char *s_first, co
 }
 
 int main() {
+#if MBED_HEAP_STATS_ENABLED
+    mbed_stats_heap_t heap_stats;
+#endif
+
     printf(" Start TCP test \r\n");
 //    GREENTEA_SETUP(20, "default_auto");
 
     bool result = true;
 
     EthernetInterface eth;
-#ifndef __CC_ARM 
-#ifdef __GNUC__
-    printf("sbrk=%x:\r\n", (unsigned int)_sbrk(0));
-#endif
-#endif 
-
 
     eth.connect(); //Use DHCP
         
@@ -103,13 +94,14 @@ int main() {
         printf("HTTP: Received massage:\r\n\r\n");
         printf("%s", buffer);
     }
- 
-#ifndef __CC_ARM 
-#ifdef __GNUC__
-    printf("sbrk=%x:\r\n", (unsigned int)_sbrk(0));
-#endif
-#endif 
+
     sock.close();
     eth.disconnect();
 //    GREENTEA_TESTSUITE_RESULT(result);
+
+#if MBED_HEAP_STATS_ENABLED
+    mbed_stats_heap_get(&heap_stats);
+    printf("Current heap: %lu\r\n", heap_stats.current_size);
+    printf("Max heap size: %lu\r\n", heap_stats.max_size);
+#endif
 }
