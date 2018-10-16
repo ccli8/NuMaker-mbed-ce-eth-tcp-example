@@ -1,13 +1,6 @@
-//#if !FEATURE_IPV4
-//    #error [NOT_SUPPORTED] IPV4 not supported for this target
-//#endif
-
-#include <algorithm>
 #include "mbed.h"
 #include "EthernetInterface.h"
 #include "TCPSocket.h"
-#include "greentea-client/test_env.h"
-#include "unity/unity.h"
 
 //#define LOCAL_LAN
 
@@ -51,8 +44,7 @@ int main() {
     mbed_stats_heap_t heap_stats;
 #endif
 
-    printf(" Start TCP test \r\n");
-//    GREENTEA_SETUP(20, "default_auto");
+    printf("Start TCP test \r\n");
 
     bool result = true;
 
@@ -72,7 +64,7 @@ int main() {
         strcpy(buffer, "GET http://");
         strcat(buffer, HTTP_SERVER_NAME);
         strcat(buffer, HTTP_SERVER_FILE_PATH);
-        strcat(buffer, " HTTP/1.0\n\n");
+        strcat(buffer, "HTTP/1.0\n\n");
         // Send GET command
         sock.send(buffer, strlen(buffer));
 
@@ -97,7 +89,6 @@ int main() {
 
     sock.close();
     eth.disconnect();
-//    GREENTEA_TESTSUITE_RESULT(result);
 
 #if MBED_HEAP_STATS_ENABLED
     mbed_stats_heap_get(&heap_stats);
