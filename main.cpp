@@ -2,6 +2,7 @@
 #include "EthernetInterface.h"
 #include "TCPSocket.h"
 
+#define USE_HTTP_1_1
 //#define LOCAL_LAN
 
 namespace {
