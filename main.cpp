@@ -21,11 +21,7 @@ const char *HTTP_SERVER_FILE_PATH = "/examples/arm_mbed/method.txt";
 const int HTTP_SERVER_PORT = 8080;
 #endif
 
-#if defined(TARGET_VK_RZ_A1H)
-    const int RECV_BUFFER_SIZE = 300;
-#else
     const int RECV_BUFFER_SIZE = 512;
-#endif
 
     // Test related data
     const char *HTTP_OK_STR = "200 OK";
@@ -45,6 +41,9 @@ int main() {
     mbed_stats_heap_t heap_stats;
 #endif
 
+#ifdef MBED_MAJOR_VERSION
+    printf("Mbed OS version %d.%d.%d\n\n", MBED_MAJOR_VERSION, MBED_MINOR_VERSION, MBED_PATCH_VERSION);
+#endif
     printf("Start TCP test \r\n");
 
     bool result = true;
@@ -52,14 +51,26 @@ int main() {
     EthernetInterface eth;
 
     eth.connect(); //Use DHCP
-        
+
+#if (MBED_MAJOR_VERSION == 6)
+    static SocketAddress sa;
+    eth.get_ip_address(&sa);
+    printf("TCP client IP Address is %s\r\n", sa.get_ip_address());
+    TCPSocket sock;
+    sock.open(&eth);
+
+    eth.gethostbyname(HTTP_SERVER_NAME, &sa);
+    sa.set_port(HTTP_SERVER_PORT);
+    if (sock.connect(sa) == 0) {    
+        printf("HTTP: Connected to %s:%d\r\n", HTTP_SERVER_NAME, HTTP_SERVER_PORT);    
+#else        
     printf("TCP client IP Address is %s\r\n", eth.get_ip_address());
 
     TCPSocket sock(&eth);
    
     if (sock.connect(HTTP_SERVER_NAME, HTTP_SERVER_PORT) == 0) {
         printf("HTTP: Connected to %s:%d\r\n", HTTP_SERVER_NAME, HTTP_SERVER_PORT);
-
+#endif
         // We are constructing GET command like this:
 #ifndef USE_HTTP_1_1
         // GET http://www.ifconfig.io/method HTTP/1.0\n\n
